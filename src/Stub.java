@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 
-
+//
 public class Stub implements AppletStub {
 	
 	static String ParamNames[] = new String[16];
