@@ -41,7 +41,7 @@ import sun.awt.image.BufImgSurfaceData;
 import sun.java2d.*;
 import sun.java2d.windows.GDIWindowSurfaceData;
 
-
+//
 public class RS extends JPanel implements Runnable, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 	
 	private Hashtable<String,Class<?>> RSClasses;
