@@ -41,7 +41,7 @@ import sun.awt.image.BufImgSurfaceData;
 import sun.java2d.*;
 import sun.java2d.windows.GDIWindowSurfaceData;
 
-//
+
 public class RS extends JPanel implements Runnable, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 	
 	private Hashtable<String,Class<?>> RSClasses;
@@ -233,7 +233,7 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 		screenBuf = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		
 				
-		gameRightX = d.width-255;
+		gameRightX = d.width-245;
 		gameRightY = d.height-165;
 		gameWidth = d.width;
 		gameHeight = d.height;
@@ -242,7 +242,7 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 		
 		
 		chatRect.setBounds(0, gameRightY, 515, 165);
-		invyRect.setBounds(gameRightX, invyTop, 255, 503);
+		invyRect.setBounds(gameRightX, invyTop, 245, 503);
 		
 		showChatRect.setBounds(520, gameHeight-20, 20, 20);
 		showInvyRect.setBounds(gameRightX-20,gameHeight-20, 20, 20);
@@ -253,13 +253,32 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 	
 	
 	public void mouseClicked(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		if (x < invyRect.x && y < chatRect.y) {
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
+		} else {
+			if (chatEnabled) {
+				if (chatRect.intersects(x, y, 1, 1)) {
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x, y-chatRect.y+340, e.getClickCount(), e.isPopupTrigger()));
+					return;
+				}
+			}
+			if (invyEnabled) {
+				if (invyRect.intersects(x,y,1,1)) {
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+515, y-invyRect.y, e.getClickCount(), e.isPopupTrigger()));
+					return;
+				}
+			}
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
+		}
 	}
 
 	public void mousePressed(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
 		if (x < invyRect.x && y < chatRect.y) {
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		} else {
 			if (showChatRect.intersects(x, y, 1, 1)) {
 				chatEnabled = !chatEnabled;
@@ -277,11 +296,11 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 			}
 			if (invyEnabled) {
 				if (invyRect.intersects(x,y,1,1)) {
-					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+510, y-invyRect.y-5, e.getClickCount(), e.isPopupTrigger()));
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+515, y-invyRect.y, e.getClickCount(), e.isPopupTrigger()));
 					return;
 				}
 			}
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		}
 	}
 
@@ -289,7 +308,7 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 		int x = e.getX();
 		int y = e.getY();
 		if (x < invyRect.x && y < chatRect.y) {
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		} else {
 			if (showChatRect.intersects(x, y, 1, 1)) {
 				return;
@@ -305,11 +324,11 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 			}
 			if (invyEnabled) {
 				if (invyRect.intersects(x,y,1,1)) {
-					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+510, y-invyRect.y+5, e.getClickCount(), e.isPopupTrigger()));
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+515, y-invyRect.y, e.getClickCount(), e.isPopupTrigger()));
 					return;
 				}
 			}
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		}
 	}
 
@@ -323,7 +342,7 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 		int x = e.getX();
 		int y = e.getY();
 		if (x < invyRect.x && y < chatRect.y) {
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		} else {
 			if (chatEnabled) {
 				if (chatRect.intersects(x, y, 1, 1)) {
@@ -333,18 +352,18 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 			}
 			if (invyEnabled) {
 				if (invyRect.intersects(x,y,1,1)) {
-					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+510, y-invyRect.y+5, e.getClickCount(), e.isPopupTrigger()));
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+515, y-invyRect.y+5, e.getClickCount(), e.isPopupTrigger()));
 					return;
 				}
 			}
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		}
 	}
 	public void mouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
 		if (x < invyRect.x && y < chatRect.y) {
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		} else {
 			if (chatEnabled) {
 				if (chatRect.intersects(x, y, 1, 1)) {
@@ -354,11 +373,11 @@ public class RS extends JPanel implements Runnable, MouseListener, MouseMotionLi
 			}
 			if (invyEnabled) {
 				if (invyRect.intersects(x,y,1,1)) {
-					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+510, y-invyRect.y+5, e.getClickCount(), e.isPopupTrigger()));
+					clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), x-invyRect.x+515, y-invyRect.y, e.getClickCount(), e.isPopupTrigger()));
 					return;
 				}
 			}
-			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX), (int)(e.getY()*screenScaleY), e.getClickCount(), e.isPopupTrigger()));
+			clientCanvas.dispatchEvent(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), (int)(e.getX()*screenScaleX)+5, (int)(e.getY()*screenScaleY)+5, e.getClickCount(), e.isPopupTrigger()));
 		}
 	}
 
